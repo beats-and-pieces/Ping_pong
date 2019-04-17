@@ -9,13 +9,15 @@
 #import "ViewController.h"
 #import "PaddleView.h"
 #import "BallView.h"
+#import "GameView.h"
 
 @interface ViewController ()
 
 @property (strong, nonatomic) PaddleView *bottomPaddle;
 @property (strong, nonatomic) PaddleView *topPaddle;
 @property (strong, nonatomic) BallView *ball;
-@property (strong, nonatomic) UIView *gameField;
+//@property (strong, nonatomic) UIView *gameField;
+@property (strong, nonatomic) GameView *gameView;
 
 @property (strong, nonatomic) UILabel *topScoreCounterLabel;
 @property (strong, nonatomic) UILabel *bottomScoreCounterLabel;
@@ -31,17 +33,20 @@
 @property (assign, nonatomic) uint32_t score;
 @property (strong, nonatomic) NSTimer *gameTimer;
 
-
 @end
 
 @implementation ViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    [self initGameField];
-
+    //    [self initGameField];
+    self.gameView = [[GameView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - self.tabBarController.tabBar.frame.size.height)];
+    [self.view addSubview:self.gameView];
+    self.gameView.delegate = self;
+    [self loadUISettings];
+    [self startGame];
 }
+
 - (void)loadUISettings
 {
     self.ballDiameter = 25.0f;
@@ -50,74 +55,32 @@
     self.currentSpeed = 0.005f;
     self.speedMultiplier = 1.0f;
     self.score = 0;
-    
-    
-}
-- (void)initGameField
-
-{
-    [self loadUISettings];
-    self.view.backgroundColor = [UIColor whiteColor];
-    self.gameField = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - self.tabBarController.tabBar.frame.size.height)];
-    self.view.autoresizesSubviews = NO;
-    self.topPaddle = [[PaddleView alloc] initWithPositionForAView:self.gameField isTop:YES withWidth:self.paddleWidth withHeight:self.paddleHeight];
-    self.bottomPaddle = [[PaddleView alloc] initWithPositionForAView:self.gameField isTop:NO withWidth:self.paddleWidth withHeight:self.paddleHeight];
-    self.ball = [[BallView alloc] initWithDiameter:self.ballDiameter];
-    
-    [self.view addSubview:self.gameField];
-    
-    [self.gameField addSubview:self.topPaddle];
-    [self.gameField addSubview:self.bottomPaddle];
-    [self.gameField addSubview:self.ball];
-    
-    self.topScoreCounterLabel = [[UILabel alloc] initWithFrame:CGRectMake(16, 16, 200, 50)];
-    self.topScoreCounterLabel.textColor = [UIColor greenColor];
-    self.topScoreCounterLabel.text = @"0";
-    [self.gameField addSubview:self.topScoreCounterLabel];
-    self.bottomScoreCounterLabel = [[UILabel alloc] initWithFrame:CGRectMake(16, 48, 200, 50)];
-    self.bottomScoreCounterLabel.textColor = [UIColor blueColor];
-    self.bottomScoreCounterLabel.text = @"0";
-    [self.gameField addSubview:self.bottomScoreCounterLabel];
-    
-    self.pauseButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.pauseButton.frame = CGRectMake(CGRectGetWidth(self.view.frame) - 16.0 - 50, 32.0, 50.0, 50.0);
-    self.pauseButton.backgroundColor = [UIColor grayColor];
-    
-    self.pauseButton.layer.cornerRadius = self.pauseButton.frame.size.width / 10;
-    self.pauseButton.layer.borderWidth = 0.2;
-    self.pauseButton.alpha = 0.5;
-    self.pauseButton.layer.borderColor = [UIColor blackColor].CGColor;
-    
-    [self.pauseButton setTitle:@"||" forState:UIControlStateNormal];
-    [self.pauseButton addTarget:self action:@selector(pauseGame) forControlEvents:UIControlEventTouchUpInside];
-    [self.gameField addSubview: self.pauseButton];
-    [self.gameField sendSubviewToBack:self.pauseButton];
-    
-    [self startGame];
 }
 
 - (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
 {
     UITouch *touch = touches.anyObject;
-    CGPoint currentPoint = [touch locationInView:self.view];
+    CGPoint currentPoint = [touch locationInView:self.gameView];
+    NSLog(@"%f", currentPoint.x);
     
-    if (currentPoint.x >= self.gameField.frame.size.width - self.ballDiameter)
+    if (currentPoint.x >= self.gameView.frame.size.width - self.ballDiameter)
     {
-        self.bottomPaddle.center = CGPointMake(self.gameField.frame.size.width - self.ballDiameter, self.gameField.frame.size.height - self.paddleHeight / 2);
+        NSLog(@"first");
+        self.gameView.bottomPaddle.center = CGPointMake(self.gameView.frame.size.width - self.ballDiameter, self.gameView.frame.size.height - self.paddleHeight / 2);
     }
     else if (currentPoint.x <= self.ballDiameter)
     {
-        self.bottomPaddle.center = CGPointMake(self.ballDiameter, self.gameField.frame.size.height - self.paddleHeight / 2);
+        self.gameView.bottomPaddle.center = CGPointMake(self.ballDiameter, self.gameView.frame.size.height - self.paddleHeight / 2);
     }
     else
     {
-        self.bottomPaddle.center = CGPointMake(currentPoint.x, self.gameField.frame.size.height - self.paddleHeight / 2);
+        self.gameView.bottomPaddle.center = CGPointMake(currentPoint.x, self.gameView.frame.size.height - self.paddleHeight / 2);
     }
 }
 
 - (void)startGame
 {
-    self.ball.center = self.view.center;
+    self.gameView.ball.center = self.view.center;
     self.dX = 1.0;
     self.dY = 1.0;
     
@@ -126,35 +89,35 @@
 
 - (void)moveBall
 {
-    if (self.ball.center.x >= self.gameField.frame.size.width - self.topPaddle.frame.size.width / 2)
+    if (self.gameView.ball.center.x >= self.gameView.frame.size.width - self.gameView.topPaddle.frame.size.width / 2)
     {
-        self.topPaddle.center = CGPointMake(self.gameField.frame.size.width - self.paddleWidth / 2, self.paddleHeight / 2);
+        self.gameView.topPaddle.center = CGPointMake(self.gameView.frame.size.width - self.paddleWidth / 2, self.paddleHeight / 2);
     }
-    else if (self.ball.center.x <= self.topPaddle.frame.size.width / 2)
+    else if (self.gameView.ball.center.x <= self.topPaddle.frame.size.width / 2)
     {
-        self.topPaddle.center = CGPointMake(self.topPaddle.frame.size.width / 2, self.paddleHeight / 2);
+        self.gameView.topPaddle.center = CGPointMake(self.gameView.topPaddle.frame.size.width / 2, self.paddleHeight / 2);
     }
     else
     {
-        self.topPaddle.center = CGPointMake(self.ball.center.x, self.paddleHeight / 2);
+        self.gameView.topPaddle.center = CGPointMake(self.gameView.ball.center.x, self.paddleHeight / 2);
     }
     
     [self bounceBallIfNeeded];
     [self checkIfComputerScored];
-    self.ball.center = CGPointMake(self.ball.center.x + self.dX, self.ball.center.y + self.dY);
+    self.gameView.ball.center = CGPointMake(self.gameView.ball.center.x + self.dX, self.gameView.ball.center.y + self.dY);
     
     
 }
 
 - (void)bounceBallIfNeeded
 {
-    if (CGRectIntersectsRect(self.ball.frame, self.topPaddle.frame) || CGRectIntersectsRect(self.ball.frame, self.bottomPaddle.frame))
+    if (CGRectIntersectsRect(self.gameView.ball.frame, self.self.gameView.topPaddle.frame) || CGRectIntersectsRect(self.gameView.ball.frame, self.self.gameView.bottomPaddle.frame))
     {
         self.dY *= -1;
     }
     
-    if ((self.ball.frame.origin.x + self.ball.frame.size.width > self.view.frame.size.width) ||
-        (self.ball.frame.origin.x < 0))
+    if ((self.gameView.ball.frame.origin.x + self.gameView.ball.frame.size.width > self.view.frame.size.width) ||
+        (self.gameView.ball.frame.origin.x < 0))
     {
         self.dX *= -1;
     }
@@ -162,10 +125,10 @@
 
 - (void)checkIfComputerScored
 {
-    if (self.ball.frame.origin.y + self.ball.frame.size.height > self.view.frame.size.height){
+    if (self.gameView.ball.frame.origin.y + self.gameView.ball.frame.size.height > self.view.frame.size.height){
         self.score++;
         NSLog(@"%d", self.score);
-        self.topScoreCounterLabel.text = [NSString stringWithFormat:@"%d",self.score];
+        self.gameView.topScoreCounterLabel.text = [NSString stringWithFormat:@"%d",self.score];
         [self resetGame];
     }
     
@@ -174,7 +137,7 @@
 -(void)resetGame
 {
     [self stopTimer];
-    self.ball.center = self.view.center;
+    self.gameView.ball.center = self.gameView.center;
     self.dY *= -1;
     self.dX *= -1;
     
@@ -205,9 +168,7 @@
         [self startTimer];
         [self.pauseButton setTitle:@"||" forState:UIControlStateNormal];
     }
-    
-    
-    
+
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -228,12 +189,25 @@
             [self resetGame];
         }
         
-        
         NSLog(@"Speed loaded!");
     }
-    
-    
-    
-    
+
 }
+
+- (void)pauseButtonPressed {
+    if (!self.isPaused)
+    {
+        [self stopTimer];
+        self.isPaused = YES;
+        [self.gameView.pauseButton setTitle:@">" forState:UIControlStateNormal];
+    }
+    else
+    {
+        self.isPaused = NO;
+        [self startTimer];
+        [self.gameView.pauseButton setTitle:@"||" forState:UIControlStateNormal];
+    }
+}
+
+
 @end

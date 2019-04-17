@@ -12,7 +12,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface BallView : UIView
 
-
 - (id)initWithDiameter:(CGFloat)diameter;
 
 @end

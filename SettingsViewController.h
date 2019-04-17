@@ -7,8 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SettingsViewDelegate.h"
 
-@interface SettingsViewController : UIViewController
+@interface SettingsViewController : UIViewController <SettingsViewDelegate>
 
+@property (assign, nonatomic) double sliderValue;
 
 @end
