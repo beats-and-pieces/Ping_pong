@@ -13,14 +13,14 @@
 
 @interface ViewController ()
 
-@property (strong, nonatomic) PaddleView *bottomPaddle;
-@property (strong, nonatomic) PaddleView *topPaddle;
-@property (strong, nonatomic) BallView *ball;
+//@property (strong, nonatomic) PaddleView *bottomPaddle;
+//@property (strong, nonatomic) PaddleView *topPaddle;
+//@property (strong, nonatomic) BallView *ball;
 //@property (strong, nonatomic) UIView *gameField;
 @property (strong, nonatomic) GameView *gameView;
 
-@property (strong, nonatomic) UILabel *topScoreCounterLabel;
-@property (strong, nonatomic) UILabel *bottomScoreCounterLabel;
+//@property (strong, nonatomic) UILabel *topScoreCounterLabel;
+//@property (strong, nonatomic) UILabel *bottomScoreCounterLabel;
 @property (assign, nonatomic) double currentSpeed;
 @property (assign, nonatomic) double speedMultiplier;
 @property (assign, nonatomic) CGFloat dX;
@@ -28,7 +28,7 @@
 @property (assign, nonatomic) CGFloat ballDiameter;
 @property (assign, nonatomic) CGFloat paddleWidth;
 @property (assign, nonatomic) CGFloat paddleHeight;
-@property (strong, nonatomic) UIButton *pauseButton;
+//@property (strong, nonatomic) UIButton *pauseButton;
 @property (assign, nonatomic) BOOL isPaused;
 @property (assign, nonatomic) uint32_t score;
 @property (strong, nonatomic) NSTimer *gameTimer;
@@ -93,7 +93,7 @@
     {
         self.gameView.topPaddle.center = CGPointMake(self.gameView.frame.size.width - self.paddleWidth / 2, self.paddleHeight / 2);
     }
-    else if (self.gameView.ball.center.x <= self.topPaddle.frame.size.width / 2)
+    else if (self.gameView.ball.center.x <= self.gameView.topPaddle.frame.size.width / 2)
     {
         self.gameView.topPaddle.center = CGPointMake(self.gameView.topPaddle.frame.size.width / 2, self.paddleHeight / 2);
     }
@@ -160,13 +160,13 @@
     {
         [self stopTimer];
         self.isPaused = YES;
-        [self.pauseButton setTitle:@">" forState:UIControlStateNormal];
+        [self.gameView.pauseButton setTitle:@">" forState:UIControlStateNormal];
     }
     else
     {
         self.isPaused = NO;
         [self startTimer];
-        [self.pauseButton setTitle:@"||" forState:UIControlStateNormal];
+        [self.gameView.pauseButton setTitle:@"||" forState:UIControlStateNormal];
     }
 
 }

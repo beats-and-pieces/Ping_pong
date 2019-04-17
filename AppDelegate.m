@@ -22,17 +22,17 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     
-    ViewController *redVC = [[ViewController alloc] init];
-    redVC.tabBarItem.title = @"Игра";
-    redVC.tabBarItem.image = [UIImage imageNamed:@"zodiak2"];
+    ViewController *gameVC = [[ViewController alloc] init];
+    gameVC.tabBarItem.title = @"Игра";
+//    gameVC.tabBarItem.image = [UIImage imageNamed:@"zodiak2"];
     
-    SettingsViewController *greenVC = [[SettingsViewController alloc] init];
-    greenVC.tabBarItem.title = @"Настройки";
-    greenVC.tabBarItem.image = [UIImage imageNamed:@"zodiak3"];
+    SettingsViewController *settingsVC = [[SettingsViewController alloc] init];
+    settingsVC.tabBarItem.title = @"Настройки";
+//    settingsVC.tabBarItem.image = [UIImage imageNamed:@"zodiak3"];
     
   
     
-    NSArray *viewControllerArray = @[redVC, greenVC];
+    NSArray *viewControllerArray = @[gameVC, settingsVC];
     UITabBarController *tabBarViewController = [[UITabBarController alloc] init];
     tabBarViewController.tabBar.translucent = YES;
     tabBarViewController.tabBar.tintColor = [UIColor whiteColor];
