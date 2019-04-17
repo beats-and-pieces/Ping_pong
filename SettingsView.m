@@ -18,7 +18,6 @@
         self.backgroundColor = [UIColor whiteColor];
         [self createSlider];
         [self createLabel];
-        [self createButton];
     }
     return self;
 }
@@ -33,6 +32,7 @@
     slider.maximumValue = 2.0;
     slider.continuous = YES;
     slider.value = 1.0;
+    self.slider = slider;
     [self addSubview:slider];
 }
 
@@ -55,26 +55,8 @@
     
 }
 
-- (void)createButton
-{
-    CGRect frame = CGRectMake(self.bounds.size.width / 2 - 100, self.bounds.size.height / 2 + 100, 200.0, 30.0);
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    button.frame = frame;
-    button.backgroundColor = [UIColor grayColor];
-    
-    button.layer.cornerRadius = button.frame.size.width / 20;
-    button.layer.borderWidth = 0.2;
-    
-    button.layer.borderColor = [UIColor blackColor].CGColor;
-    
-    [button setTitle:@"Сохранить" forState:UIControlStateNormal];
-    [button addTarget:self action:@selector(saveSpeed) forControlEvents:UIControlEventTouchUpInside];
-    [self addSubview: button];
-}
 
-- (void)saveSpeed
-{
-    [self.delegate saveSpeed];
-}
+
+
 
 @end

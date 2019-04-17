@@ -13,8 +13,4 @@
 
 @property (assign, nonatomic) double sliderValue;
 
-//- (double)sliderValue;
-- (void)saveSpeed;
-
-
 @end
