@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface SettingsView : UIView
 
 @property (nonatomic, weak, nullable) id<SettingsViewDelegate> delegate;
+@property (nonatomic, strong) UISlider *slider;
 
 @end
 

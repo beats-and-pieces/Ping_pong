@@ -7,16 +7,10 @@
 //
 
 #import "SettingsViewController.h"
-//#import "SettingsViewDelegate.h"
 #import "SettingsView.h"
 
 @interface SettingsViewController ()
 
-
-
-
-//- (double)sliderValue;
-- (void)saveSpeed;
 
 @end
 
@@ -33,18 +27,16 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setBool:NO forKey:@"Speed has changed"];
-}
-
-
--(void)saveSpeed
-{
+    [self.settingsViewPresenter loadSpeed];
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults setFloat:self.sliderValue forKey:@"Selected speed"];
-    [defaults setBool:YES forKey:@"Speed has changed"];
-//    [defaults synchronize];
-    NSLog(@"Speed saved!");
+    self.settingsView.slider.value = self.sliderValue;
+
 }
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [self.settingsViewPresenter saveSpeed];
+}
+
 @end
 

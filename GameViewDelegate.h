@@ -11,9 +11,7 @@
 
 @protocol GameViewDelegate <NSObject>
 
-//@property (assign, nonatomic) double sliderValue;
 
-//- (double)sliderValue;
 - (void)pauseButtonPressed;
 
 

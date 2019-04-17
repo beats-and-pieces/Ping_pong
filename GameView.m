@@ -27,25 +27,20 @@
     self.ballDiameter = 25.0f;
     self.paddleWidth = 100;
     self.paddleHeight = 20;
-    //    self.currentSpeed = 0.005f;
-    //    self.speedMultiplier = 1.0f;
-    //    self.score = 0;
-    
-    
 }
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
-        [self loadUISettings]; /* убрать в константы */
+        [self loadUISettings]; 
         self.backgroundColor = [UIColor whiteColor];
-        self.autoresizesSubviews = NO; /* непонятно, зачем */
+        self.autoresizesSubviews = NO;
         [self createPaddles];
         [self createBall];
         [self createScoreLabels];
         [self createPauseButton];
-    
+        
     }
     return self;
 }
@@ -61,9 +56,12 @@
 
 - (void)createBall
 {
-    self.ball = [[BallView alloc] initWithDiameter:self.ballDiameter];
+        self.ball = [[BallView alloc] initWithDiameter:self.ballDiameter];
+
     [self addSubview:self.ball];
+
 }
+
 
 - (void)createScoreLabels
 {
