@@ -10,9 +10,9 @@
 
 @interface GameViewController ()
 
-@property (assign, nonatomic) double currentSpeed;
-@property (assign, nonatomic) double speedMultiplier;
-@property (assign, nonatomic) BOOL isPaused;
+//@property (assign, nonatomic) double currentSpeed;
+//@property (assign, nonatomic) double speedMultiplier;
+//@property (assign, nonatomic) BOOL isPaused;
 
 @end
 

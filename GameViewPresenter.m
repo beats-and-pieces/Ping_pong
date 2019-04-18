@@ -35,7 +35,6 @@
     }
     
     [self startTimer];
-    self.isPaused = NO;
     return self;
 }
 
@@ -105,14 +104,16 @@
 
 - (void)startTimer
 {
-    self.gameTimer = [NSTimer scheduledTimerWithTimeInterval:self.currentSpeed / self.speedMultiplier target:self selector:@selector(moveBall) userInfo:nil repeats:YES];
+    self.gameTimer = [NSTimer scheduledTimerWithTimeInterval:self.currentSpeed * self.speedMultiplier target:self selector:@selector(moveBall) userInfo:nil repeats:YES];
 }
 
 -(void)stopTimer
 {
+        NSLog(@"stop timer");
     [self.gameTimer invalidate];
     self.gameTimer = nil;
 }
+
 
 - (void)movePlayerPaddleTo:(CGPoint) currentPoint
 {
@@ -130,23 +131,6 @@
         self.gameViewController.gameView.bottomPaddle.center = CGPointMake(currentPoint.x, self.gameViewController.gameView.frame.size.height - self.gameViewController.gameView.bottomPaddle.bounds.size.height / 2);
     }
 }
--(void)pauseGame
-{
-    if (!self.isPaused)
-    {
-        [self stopTimer];
-        self.isPaused = YES;
-        [self.gameViewController.gameView.pauseButton setTitle:@">" forState:UIControlStateNormal];
-    }
-    else
-    {
-        self.isPaused = NO;
-        [self startTimer];
-        [self.gameViewController.gameView.pauseButton setTitle:@"||" forState:UIControlStateNormal];
-    }
-    
-}
-
 
 - (void)updateSpeed
 {
@@ -158,8 +142,6 @@
 
 - (void)togglePause
 {
-    NSLog(@"togglePause - VP");
-    [self stopTimer];
     if (!self.isPaused)
     {
         [self stopTimer];

@@ -11,7 +11,6 @@
 
 @interface SettingsViewController ()
 
-
 @end
 
 @implementation SettingsViewController
@@ -39,4 +38,3 @@
 }
 
 @end
-

@@ -19,6 +19,5 @@
 - (void)resetGame;
 - (void)startTimer;
 - (void)stopTimer;
-- (void)pauseGame;
 
 @end
